@@ -2,6 +2,11 @@
 pipeline {
 	//agent any
 	agent any
+	environment {
+		dockerHome = tool 'myDocker'
+		mavenHome = tool 'myMaven'
+		PATH ="$dockerHome/bin:$mavenHome/bin:$PATH"
+	}
 	stages {
 		stage('Build') {
 			steps {
@@ -17,6 +22,8 @@ pipeline {
 					# Set JAVA_OPTS to use our custom truststore
 					export JAVA_OPTS="-Djavax.net.ssl.trustStore=/tmp/certs/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
 				'''
+				sh 'mvn --version'
+				sh 'docker version'
 				echo "Build"
 				echo "BUILD PATH: $PATH"
 				echo "BUILD NUMBER: ${env.BUILD_NUMBER}"
