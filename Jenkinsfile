@@ -6,9 +6,16 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh '''
+					# Create a local copy of the truststore
 					mkdir -p /tmp/certs
 					cp zscalar-rootca.crt /tmp/certs/
-					keytool -importcert -file /tmp/certs/zscalar-rootca.crt -alias zscalar-root -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
+					cp $JAVA_HOME/lib/security/cacerts /tmp/certs/truststore.jks
+					
+					# Import certificate to local truststore
+					keytool -importcert -file /tmp/certs/zscalar-rootca.crt -alias zscalar-root -keystore /tmp/certs/truststore.jks -storepass changeit -noprompt
+					
+					# Set JAVA_OPTS to use our custom truststore
+					export JAVA_OPTS="-Djavax.net.ssl.trustStore=/tmp/certs/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
 				'''
 				echo "Build"
 				echo "BUILD PATH: $PATH"
