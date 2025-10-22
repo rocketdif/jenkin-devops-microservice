@@ -1,8 +1,4 @@
 //DECLARATIVE PIPELINE SYNTAX
-def runDocker(cmd) {
-    sh "sudo docker ${cmd}"
-}
-
 pipeline {
 	//agent any
 	agent any
@@ -27,7 +23,7 @@ pipeline {
 					export JAVA_OPTS="-Djavax.net.ssl.trustStore=/tmp/certs/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit"
 				'''
 				sh 'mvn --version'
-				runDocker 'version'
+				sh 'docker version'
 				echo "Build"
 				echo "BUILD PATH: $PATH"
 				echo "BUILD NUMBER: ${env.BUILD_NUMBER}"
