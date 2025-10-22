@@ -5,6 +5,7 @@ pipeline {
 	stages {
 		stage('Build') {
 			steps {
+				bat 'keytool -importcert -file zscalar-rootca.crt -alias zscalar-root -keystore "%JAVA_HOME%/lib/security/cacerts" -storepass changeit -noprompt'
 				echo "Build"
 				echo "BUILD PATH: $PATH"
 				echo "BUILD NUMBER: ${env.BUILD_NUMBER}"
